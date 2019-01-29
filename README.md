@@ -61,6 +61,11 @@ where $obj$ is the object class you wish to train
 
 
 ## Mesh Reconstruction
+<p align="center">
+  <img  src="images/pipeline_1901_thick.png"  >
+</p>
+
+
 The ideas put forth in this paper are applied to the task of reconstructing 3D meshes from single RGB images. This is accomplished by itertively applying what we call a mesh generation module to an inputted mesh and image pair. In each module, image features are extracted form the image, and projected onto the inputted mesh. Then the mesh is passed through a series of our proposed 0N-CGN layers to deform its shape. Finally, the surface of the mesh is adaptively redefined based on the local curvate of its faces. The first module is presented a predefined mesh along with the target image, and each subsequent module takes the output of the previous mesh as its input mesh. The loss for this system is a combination of the latent loss, the differentioable surface losses, and two regularizers. 
 
 To train this system call
@@ -73,9 +78,6 @@ where $obj$ is the object class you wish to train.
 
 
 
-<p align="center">
-  <img  src="images/pipeline_1901_thick.png"  >
-</p>
 
 
 
