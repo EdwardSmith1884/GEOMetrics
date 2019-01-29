@@ -61,14 +61,32 @@ where $obj$ is the object class you wish to train
 
 
 ## Mesh Reconstruction
-The combination of 
+The ideas put forth in this paper are applied to the task of reconstructing 3D meshes from single RGB images. This is accomplished by itertively applying what we call a mesh generation module to an inputted mesh and image pair. In each module, image features are extracted form the image, and projected onto the inputted mesh. Then the mesh is passed through a series of our proposed 0N-CGN layers to deform its shape. Finally, the surface of the mesh is adaptively redefined based on the local curvate of its faces. The first module is presented a predefined mesh along with the target image, and each subsequent module takes the output of the previous mesh as its input mesh. The loss for this system is a combination of the latent loss, the differentioable surface losses, and two regularizers. 
+
+To train this system call
+ ```bash
+python GEOMetrics.py --object $obj$
+```
+where $obj$ is the object class you wish to train. 
 
 
-<ul align="center">
-  <img  src="images/chair_best.png" width="400" >
-  <img  src="images/plane_best.png" width="400" >
-</ul>
-<sub>Example objects super-resolution resolution results. High definition copies of these images can be found in the Images folder. </sub>
+
+
+
+<p align="center">
+  <img  src="images/pipeline_1901_thick.png"  >
+</p>
+<sub> A diagram depicting a single mesh reconstruction module. </sub>
+
+
+<p align="center">
+  <img  src="images/results.png"  >
+</p>
+<sub> Reconstruction results. </sub>
+
+
+
+
 
 
 
