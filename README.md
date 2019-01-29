@@ -79,7 +79,7 @@ where $obj$ is the object class you wish to train.
 
 
 <p align="center">
-  <img  src="images/pipeline_1901_thick.png"   width = "600">
+  <img  src="images/pipeline_1901_thick.png"   width = "800">
 </p>
 <p align="center">
   <sub> A single mesh reconstruction module. </sub>
@@ -87,7 +87,7 @@ where $obj$ is the object class you wish to train.
 
 
 <p align="center">
- <sub> Reconstruction results </sub> 
+  <img  src="images/results.png"   width = "600">
 </p>
 <p align="center">
  <sub> Reconstruction results </sub> 
