@@ -77,12 +77,8 @@ where $obj$ is the object class you wish to train.
 
 
 
-
-
-
-
 <p align="center">
-  <img  src="images/results.png"  >
+  <img  src="images/results.png" width = 600  >
 </p>
 
 
