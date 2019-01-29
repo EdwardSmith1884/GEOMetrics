@@ -76,13 +76,12 @@ where $obj$ is the object class you wish to train.
 <p align="center">
   <img  src="images/pipeline_1901_thick.png"  >
 </p>
-<sub> A diagram depicting a single mesh reconstruction module. </sub>
+
 
 
 <p align="center">
   <img  src="images/results.png"  >
 </p>
-<sub> Reconstruction results. </sub>
 
 
 
