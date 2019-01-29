@@ -10,7 +10,7 @@ This is a repository to reproduce the methods from the paper "GEOMetrics: Exploi
 </p>
 
 There are 4 main ideas proposed in this project: 
- * A differentaible surface sampling of faces allowing for a point-to-point loss and a point-to-surface loss to be introduced.
+ * A differentaible surface sampling of faces allowing for a point-to-point loss and a point-to-surface loss to be introduced. This is examined in the Loss_Comparison directory. 
  * A latent loss based on minimizing the distance between encodings of mesh objects produced through a mesh-to-voxel mapping procedure. 
  * A extension to the standard Graph Convolution Network called 0N-GCN which prevents vertex smoothing. This is defined in Layers.py.
  * An adaptive face splitting procedure which analyses local face curvature to encourage local complexity emerge.
