@@ -29,14 +29,18 @@ By default this scripts downloads the full chair class, and render 24 images for
  ```bash
 python data_prep.py
 ```
-As an example to further understand how to customize the data, to produced 1000 plane call:
+As an example to further understand how to customize the data, to produce 1000 plane call:
  ```bash
 python data_prep.py --object plane -no 1000
 ```
 
 ## Diffentiable Surface Losses
-We introduce two new losses for reconstructing meshes. These losses are based of the idea of differentiating through the random selection of points on a triangular surface via the reparametrization trick. This allows the adoption of a chamfer loss comparing the samplings of ground truth and predicted mesh surfaces, which does not explicitly penalize the position of vertices. We call this the point-to-point loss. This idea also allows to the adoption of a more accurate loss which compares a sampled set of points to a surface directly, using the "3D point to triangle distance" algorithm. We call this the point-to-surface loss, and compare to the point-to-point loss and a loss which instead penalizes vertex position in their ability to reconstruct surfaces, in the Loss_Comparison directory. 
+We introduce two new losses for reconstructing meshes. These losses are based of the idea of differentiating through the random selection of points on a triangular surface via the reparametrization trick. This allows the adoption of a chamfer loss comparing the samplings of ground truth and predicted mesh surfaces, which does not explicitly penalize the position of vertices. We call this the point-to-point loss. This idea also allows to the adoption of a more accurate loss which compares a sampled set of points to a surface directly, using the "3D point to triangle distance" algorithm. We call this the point-to-surface loss. We compare these two losses and to a loss which directly penalizes vertex position with respect to their ability to reconstruct surfaces, in the Loss_Comparison directory. 
 
+<p align="center">
+  <img  src="images/loss_comparison.png"  >
+</p>
+<sub> A diagram comparing different reconstruction losses. </sub>
 
 ## Latent Loss 
 One of the main contributions of this project, and a principle loss term for the complete mesh generation pipeline is the latent loss. To produce this loss we first train a mesh-to-voxel mapping. A mesh enocder, made up of our proposed 0N-GCN layers, takes as input a mesh object defined by vertex positions and an adjacency matrix and outputs a small lantent vector. This vector is passed to a voxel decoder which outputs a voxelized representation of the origional mesh. This mapping is trained to minimize the MSE between the ground-truth voxelization of the mesh and the predicted voxelization. When training the complete mesh prediction system the training objective is partly defined by the MSE between the latent embedding of the ground-truth mesh and the predicted mesh. 
