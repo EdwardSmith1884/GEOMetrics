@@ -77,6 +77,14 @@ python GEOMetrics.py --object $obj$
 ```
 where $obj$ is the object class you wish to train. 
 
+To render the results of a trained system on the test set call
+ ```bash
+python GEOMetrics.py --object $obj$ --render
+```
+where $obj$ is the object class you wish to train. 
+
+
+
 
 <p align="center">
   <img  src="images/pipeline_1901_thick.png"   width = "800">
