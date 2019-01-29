@@ -1,11 +1,13 @@
 # GEOMetrics
 This is a repository to reproduce the methods from the paper "GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects". This project is a combination of new ideas for mesh generation, applied to reconstructing mesh objects from single images. The goal of this porject is to produce mesh objects which properly take advatage of graceful scaling properties of thier graph-based representation. 
  
- 
+
 <p align="center">
   <img  src="images/density.png" width="500"  >
 </p>
+<p align="center">
 <sub>Example of the variation in face density our method achieves</sub>
+</p>
 
 There are 4 main ideas proposed in this project: 
  * A differentaible surface sampling of faces allowing for a point-to-point loss and a point-to-surface loss to be introduced.
@@ -40,7 +42,9 @@ We introduce two new losses for reconstructing meshes. These losses are based of
 <p align="center">
   <img  src="images/loss_comparison.png"  >
 </p>
+<p align="center">
 <sub> A diagram comparing different reconstruction losses. </sub>
+ </p>
 
 ## Latent Loss 
 One of the main contributions of this project, and a principle loss term for the complete mesh generation pipeline is the latent loss. To produce this loss we first train a mesh-to-voxel mapping. A mesh enocder, made up of our proposed 0N-GCN layers, takes as input a mesh object defined by vertex positions and an adjacency matrix and outputs a small lantent vector. This vector is passed to a voxel decoder which outputs a voxelized representation of the origional mesh. This mapping is trained to minimize the MSE between the ground-truth voxelization of the mesh and the predicted voxelization. When training the complete mesh prediction system the training objective is partly defined by the MSE between the latent embedding of the ground-truth mesh and the predicted mesh. 
@@ -56,17 +60,16 @@ where $obj$ is the object class you wish to train
 <p align="center">
   <img  src="images/enc_dec.png" width="600"  >
 </p>
-<sub> A diagram illustrating the mesh-to-voxel mapping and how it is employed for procuding the latent loss. </sub>
-
-
-
-## Mesh Reconstruction
 <p align="center">
-  <img  src="images/pipeline_1901_thick.png"  >
+<sub> A diagram illustrating the mesh-to-voxel mapping and how it is employed for procuding the latent loss. </sub>
 </p>
 
 
-The ideas put forth in this paper are applied to the task of reconstructing 3D meshes from single RGB images. This is accomplished by itertively applying what we call a mesh generation module to an inputted mesh and image pair. In each module, image features are extracted form the image, and projected onto the inputted mesh. Then the mesh is passed through a series of our proposed 0N-CGN layers to deform its shape. Finally, the surface of the mesh is adaptively redefined based on the local curvate of its faces. The first module is presented a predefined mesh along with the target image, and each subsequent module takes the output of the previous mesh as its input mesh. The loss for this system is a combination of the latent loss, the differentioable surface losses, and two regularizers. 
+## Mesh Reconstruction
+
+
+
+The ideas put forth in this paper are applied to the task of reconstructing 3D meshes from single RGB images. This is accomplished by itertively applying what we call a mesh reconstruction module to an inputted mesh and image pair. In each module, image features are extracted form the image, and projected onto the inputted mesh. Then the mesh is passed through a series of our proposed 0N-CGN layers to deform its shape. Finally, the surface of the mesh is adaptively redefined based on the local curvate of its faces. The first module is presented a predefined mesh along with the target image, and each subsequent module takes the output of the previous mesh as its input mesh. The loss for this system is a combination of the latent loss, the differentiable surface losses, and two regularizers. 
 
 To train this system call
  ```bash
@@ -75,10 +78,19 @@ python GEOMetrics.py --object $obj$
 where $obj$ is the object class you wish to train. 
 
 
+<p align="center">
+  <img  src="images/pipeline_1901_thick.png"   width = "600">
+</p>
+<p align="center">
+  <sub> A single mesh reconstruction module. </sub>
+</p>
 
 
 <p align="center">
-  <img  src="images/results.png" width = 600  >
+ <sub> Reconstruction results </sub> 
+</p>
+<p align="center">
+ <sub> Reconstruction results </sub> 
 </p>
 
 
