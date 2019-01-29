@@ -3,7 +3,7 @@ This is a repository to reproduce the methods from the paper "GEOMetrics: Exploi
  
  
 <p align="center">
-  <img  src="images/density.png"  >
+  <img  src="images/density.png" width="500"  >
 </p>
 <sub>Example of the variation in face density our method achieves</sub>
 
@@ -45,16 +45,19 @@ We introduce two new losses for reconstructing meshes. These losses are based of
 ## Latent Loss 
 One of the main contributions of this project, and a principle loss term for the complete mesh generation pipeline is the latent loss. To produce this loss we first train a mesh-to-voxel mapping. A mesh enocder, made up of our proposed 0N-GCN layers, takes as input a mesh object defined by vertex positions and an adjacency matrix and outputs a small lantent vector. This vector is passed to a voxel decoder which outputs a voxelized representation of the origional mesh. This mapping is trained to minimize the MSE between the ground-truth voxelization of the mesh and the predicted voxelization. When training the complete mesh prediction system the training objective is partly defined by the MSE between the latent embedding of the ground-truth mesh and the predicted mesh. 
 
-<p align="center">
-  <img  src="images/enc_dec.png"  >
-</p>
-<sub> A diagram illustrating the mesh-to-voxel mapping and how it is employed for procuding the latent loss. </sub>
-
 To train this system call
  ```bash
 python auto_encoder.py --object $obj$
 ```
 where $obj$ is the object class you wish to train 
+
+
+
+<p align="center">
+  <img  src="images/enc_dec.png" width="600"  >
+</p>
+<sub> A diagram illustrating the mesh-to-voxel mapping and how it is employed for procuding the latent loss. </sub>
+
 
 
 ## Mesh Reconstruction
