@@ -16,7 +16,7 @@ parser.add_argument('--object', type=str, default='chair',
 args = parser.parse_args()
 batch_size = 5
 loss_term = point_to_point
-
+sample_length = 3000
 
 np.random.seed(args.seed)
 torch.manual_seed(args.seed)
@@ -58,6 +58,7 @@ except:
     print 'You forgot to train the auto-encoder'
     exit()
 if args.render:
+    data_valid = Mesh_loader(images + 'test/' ,meshes, samples)
     modelA.load_state_dict(torch.load(checkpoint_dir + 'model_1'))
     modelB.load_state_dict(torch.load(checkpoint_dir + 'model_2'))
     modelC.load_state_dict(torch.load(checkpoint_dir + 'model_3'))
@@ -128,9 +129,9 @@ def train(loader, epoch, num_interations, iteration, best):
             latent_loss = torch.mean(torch.abs(latent_pred - latent_gt)) * .001
 
         # surface loss
-        surface_loss_1,_ = loss_term(vertex_positions_1, adj_info, gt_samp[:3000] ,num = 3000  )
-        surface_loss_2,_ = loss_term(vertex_positions_2, adj_info_2, gt_samp[:3000],num = 3000  )
-        surface_loss_3,_ = loss_term(vertex_positions_3, adj_info_3, gt_samp[:3000] ,num = 3000  )
+        surface_loss_1,_ = loss_term(vertex_positions_1, adj_info, gt_samp[:sample_length] ,num = sample_length  )
+        surface_loss_2,_ = loss_term(vertex_positions_2, adj_info_2, gt_samp[:sample_length],num = sample_length  )
+        surface_loss_3,_ = loss_term(vertex_positions_3, adj_info_3, gt_samp[:sample_length] ,num = sample_length  )
         surface_loss = surface_loss_1 + surface_loss_2 + surface_loss_3
         real_distance += surface_loss_3.data.cpu().numpy()
 
@@ -236,7 +237,7 @@ def validate(batch):
 
 
 full_valid_loss, full_train_loss, length, min_val, real_val  = [],[], 50, 1000, 0
-valid_batch = data_valid.load_batch(2, ordered = True)
+valid_batch = data_valid.load_batch(15, ordered = True)
 
 
 if args.render:
@@ -251,6 +252,7 @@ for epoch in range(3000):
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.00001
         loss_term = point_to_surface
+        sample_length = 500
 
 
     for i in range(length):

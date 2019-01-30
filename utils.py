@@ -4,6 +4,8 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
+import scipy.sparse as sp
+import gc
 import sys
 import os
 import torch
@@ -19,6 +21,7 @@ import math
 from time import time as time 
 from scipy import stats
 from tqdm import tqdm 
+from voxel import *
 
 #import chamfer distance 
 sys.path.insert(0, "chamfer_distance/")
@@ -1021,3 +1024,9 @@ def point_to_line(verts, faces, points):
 	# BEAUtiful
 
 	return torch.mean(min_distaces)
+
+def render_mesh( verts, faces, image):
+	
+	image = (image*256).astype('uint8')
+	Image.fromarray(image).show()
+	mesh2obj( verts, faces) 

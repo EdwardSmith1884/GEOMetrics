@@ -23,6 +23,9 @@ This project runs with the following dependencies:
   * matplotlib
   * PIL 
   * tqdm 
+  * meshlab
+  * blender
+  * binvoxer
 
 ## Data Production
  To produce the data needed to train and test the methods of this project use the 'data_prep.py' script. This will download CAD models from the core classes of the ShapeNet data set, produce the data required to train the latent loss, sample the surface of each ground truth mesh, render the objects as images, and split all the data into training, validation and test sets. This script makes use of the binvoxer executable, so first call:
