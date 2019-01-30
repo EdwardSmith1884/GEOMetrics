@@ -24,8 +24,7 @@ from voxel import voxel2obj
 
 parser = argparse.ArgumentParser(description='Dataset prep for image to 3D object super resolution')
 parser.add_argument('-o','--object', default=['chair'], help='List of object classes to be used downloaded and converted.', nargs='+' )
-parser.add_argument('-no','--num_objects', default=2, help='number of objects to be converted', type = int)
-parser.add_argument('-l','--low', default=32, help='Low resolution value', type = int)
+parser.add_argument('-no','--num_objects', default=10000, help='number of objects to be converted', type = int)
 args = parser.parse_args()
 
 
@@ -47,7 +46,7 @@ for l in labels:
 		wanted_classes.append(l)
 print wanted_classes
 
-debug_mode = True # change to make all of the called scripts print their errors and warnings
+debug_mode = False # change to make all of the called scripts print their errors and warnings
 if debug_mode:
 	io_redirect = ''
 else:
@@ -186,7 +185,7 @@ def binvox():
 		commands =[]
 		count = 0
 		for d in tqdm(dirs):
-			command = './binvox ' + d  + ' -d ' + str(32)+ ' -pb -cb -c -e'   # this executable can be found at http://www.patrickmin.com/binvox/ ,
+			command = 'scripts/binvox ' + d  + ' -d ' + str(32)+ ' -pb -cb -c -e'   # this executable can be found at http://www.patrickmin.com/binvox/ ,
 			# -d x idicates resoltuion will be x by x by x , -pb is to stop the visualization, the rest of the commnads are to help make the object water tight
 			commands.append(command)
 			if count %20 == 0  and count != 0:
@@ -341,7 +340,7 @@ def calc_surface():
 		commands =[]
 		count = 0
 		for d in tqdm(dirs):
-			command = './binvox ' + d  + ' -d ' + str(dims)+ ' -pb -cb -c -e'   # this executable can be found at http://www.patrickmin.com/binvox/ ,
+			command = 'scripts/binvox ' + d  + ' -d ' + str(dims)+ ' -pb -cb -c -e'   # this executable can be found at http://www.patrickmin.com/binvox/ ,
 			# -d x idicates resoltuion will be x by x by x , -pb is to stop the visualization, the rest of the commnads are to help make the object water tight
 			commands.append(command)
 			if count %20 == 0  and count != 0:

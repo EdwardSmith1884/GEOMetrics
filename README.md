@@ -16,7 +16,13 @@ There are 4 main ideas proposed in this project:
  * An adaptive face splitting procedure which analyses local face curvature to encourage local complexity emerge.
 
 
-
+This project runs with the following dependencies: 
+  * python 2.7 
+  * pytorch 0.4.0
+  * scipy
+  * matplotlib
+  * PIL 
+  * tqdm 
 
 ## Data Production
  To produce the data needed to train and test the methods of this project use the 'data_prep.py' script. This will download CAD models from the core classes of the ShapeNet data set, produce the data require for the latent loss, sample the surface of each ground truth mesh, render the objects as images, and split all the data into training, validation and test sets. This script makes use of the binvoxer executable, so first call
@@ -38,6 +44,13 @@ python data_prep.py --object plane -no 1000
 
 ## Diffentiable Surface Losses
 We introduce two new losses for reconstructing meshes. These losses are based of the idea of differentiating through the random selection of points on a triangular surface via the reparametrization trick. This allows the adoption of a chamfer loss comparing the samplings of ground truth and predicted mesh surfaces, which does not explicitly penalize the position of vertices. We call this the point-to-point loss. This idea also allows to the adoption of a more accurate loss which compares a sampled set of points to a surface directly, using the "3D point to triangle distance" algorithm. We call this the point-to-surface loss. We compare these two losses and to a loss which directly penalizes vertex position with respect to their ability to reconstruct surfaces, in the Loss_Comparison directory. 
+
+These functions require a python package to be built. To do this call: 
+ ```bash
+python chamfer_distance/build.py
+```
+
+
 
 <p align="center">
   <img  src="images/loss_comparison.png"  >

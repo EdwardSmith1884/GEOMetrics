@@ -47,7 +47,7 @@ encoder3 = VGG()
 modelA = MeshDeformationBlock(963)
 modelB = MeshDeformationBlock(1155)
 modelC = MeshDeformationBlock(1155)
-encoder_mesh = MeshEncoder(100)
+encoder_mesh = MeshEncoder(50)
 modelA.cuda(), encoder1.cuda(), encoder2.cuda(),encoder3.cuda(), modelB.cuda(), modelC.cuda(), encoder_mesh.cuda()
 params = list(modelA.parameters()) + list(encoder1.parameters()) + list(encoder2.parameters()) + list(encoder3.parameters()) +list(modelB.parameters())  +list(modelC.parameters())
 optimizer = optim.Adam(params,lr=args.lr)
@@ -55,7 +55,8 @@ optimizer = optim.Adam(params,lr=args.lr)
 try:
     encoder_mesh.load_state_dict(torch.load('checkpoint/'+ args.object + '/encoder'))
 except:
-    print 'You forgot to load the auto-encoder'
+    print 'You forgot to train the auto-encoder'
+    exit()
 if args.render:
     modelA.load_state_dict(torch.load(checkpoint_dir + 'model_1'))
     modelB.load_state_dict(torch.load(checkpoint_dir + 'model_2'))

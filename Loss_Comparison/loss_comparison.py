@@ -1,9 +1,12 @@
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(BASE_DIR)
-sys.path.append(BASE_DIR + '../scripts/')
-from __future__ import division
+import os
+import sys
+BASEDIR =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASEDIR)
+sys.path.append(BASEDIR + '/chamfer_distance/')
+
 from collections import namedtuple
 from utils import * 
+
 from torch.nn.parameter import Parameter
 
 
@@ -31,9 +34,6 @@ class changer(nn.Module):
 	def forward(self, points):
 		points = points + self.bias 
 		return points
-
-
-
 
 
 

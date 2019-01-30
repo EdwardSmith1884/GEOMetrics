@@ -1,4 +1,3 @@
-import time
 import argparse
 import numpy as np
 import torch
@@ -7,8 +6,6 @@ import torch.optim as optim
 from torch.autograd import Variable
 import sys
 import os
-import gc
-import scipy.sparse as sp
 import torch
 from glob import glob
 import scipy.io as sio
@@ -24,7 +21,7 @@ from scipy import stats
 from tqdm import tqdm 
 
 #import chamfer distance 
-sys.path.insert(0,'chamfer_distance/')
+sys.path.insert(0, "chamfer_distance/")
 from modules.nnd import NNDModule
 dist =  NNDModule()
 np.random.seed(2)
@@ -138,7 +135,6 @@ def adj_init(faces,num_verts):
 
 # normalizes symetric, binary adj matrix such that sum of each row is 1 
 def normalize_adj(mx):
-	"""Row-normalize sparse matrix"""
 	rowsum = np.array(mx.sum(1))
 	r_inv = np.power(rowsum, -1).flatten()
 	r_inv[np.isinf(r_inv)] = 0.
@@ -291,13 +287,12 @@ class Voxel_loader(object):
 			verts = mesh_info['verts']
 			verts= torch.FloatTensor(np.array(verts)).cuda()
 			faces = mesh_info['faces']
-			dist = mesh_info['orig_adj']
-			dist[np.where(dist > 0)] = 1. 
-			dist = calc_dist( verts, dist)
-			dist = normalize_adj(dist)
+			adj = mesh_info['orig_adj']
+			adj[np.where(adj > 0)] = 1. 
+			adj = normalize_adj(adj)
 
-			dist = torch.FloatTensor(dist).cuda()
-			adj_info={'adj': dist}
+			adj = torch.FloatTensor(adj).cuda()
+			adj_info={'adj': adj}
 			batch_verts.append(verts)
 			batch_faces.append(torch.LongTensor(np.array(faces)).cuda())
 			batch_adjs.append(adj_info)
@@ -325,22 +320,6 @@ class Voxel_loader(object):
 		return batch
 
 
-def calc_dist(verts, adj): 
-	adj_maintained = torch.FloatTensor(adj).cuda()
-	adj = adj_maintained + torch.FloatTensor(np.eye(adj_maintained.shape[0])).cuda()
-	
-	positions = torch.FloatTensor(np.array(verts)).cuda()
-	reshape_positions = positions.view(positions.shape[0], positions.shape[1], 1)
-	reshape_positions = reshape_positions.expand(positions.shape[0], positions.shape[1], positions.shape[0]).permute(0,2,1)
-	cross_positions = reshape_positions.permute(1,0,2)
-	dist = torch.sum((reshape_positions- cross_positions)**2, dim = 2)
-	
-	dist = 1/dist
-	for k in range(verts.shape[0]): 
-		dist[k,k] = torch.min(dist[k,dist[k].nonzero()])
-	dist = dist*adj
-	dist = (dist).data.cpu().numpy()
-	return dist 
 
 
 # graphs the training and validation information 
