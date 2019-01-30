@@ -3,6 +3,11 @@ import os
 def call(command):
     os.system('%s > /dev/null 2>&1' % command)
 
+def voxel2obj(filename, pred, show='False', threshold=0.4):
+    verts, faces = voxel2mesher(pred, threshold )
+    write_obj(filename, verts, faces)
+    call('meshlab ' + filename)
+
 
 
 def write_obj(filename, verts, faces):
