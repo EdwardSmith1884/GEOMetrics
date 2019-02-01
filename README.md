@@ -124,8 +124,8 @@ where $obj$ is the object class you wish to train.
 please cite my paper: https://arxiv.org/abs/1901.11461 ,if you use this repo for research with following bibtex: 
 
             @misc{1901.11461,
-Author = {Edward J. Smith and Scott Fujimoto and Adriana Romero and David Meger},
-Title = {GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects},
-Year = {2019},
-Eprint = {arXiv:1901.11461},
-}
+            Author = {Edward J. Smith and Scott Fujimoto and Adriana Romero and David Meger},
+            Title = {GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects},
+            Year = {2019},
+            Eprint = {arXiv:1901.11461},
+             }
