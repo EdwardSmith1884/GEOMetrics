@@ -116,7 +116,8 @@ where $obj$ is the object class you wish to train.
 
 
 
-
+## Contact:
+If you need any help getting the repo to work or have any question regarind the code or thr paper, I'm happy to help at edward.smith@mail.mcgill.ca . 
 
 
 
