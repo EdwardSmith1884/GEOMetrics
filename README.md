@@ -124,9 +124,18 @@ If you need any help getting the repo to work or have any question regardng the 
 ## Reference:
 please cite my paper: https://arxiv.org/abs/1901.11461 ,if you use this repo for research with following bibtex: 
 
-            @misc{1901.11461,
-            Author = {Edward J. Smith and Scott Fujimoto and Adriana Romero and David Meger},
-            Title = {GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects},
-            Year = {2019},
-            Eprint = {arXiv:1901.11461},
-             }
+           @InProceedings{smith19a,
+            title = 	 {{GEOM}etrics: Exploiting Geometric Structure for Graph-Encoded Objects},
+            author = 	 {Smith, Edward and Fujimoto, Scott and Romero, Adriana and Meger, David},
+            booktitle = 	 {Proceedings of the 36th International Conference on Machine Learning},
+            pages = 	 {5866--5876},
+            year = 	 {2019},
+            editor = 	 {Chaudhuri, Kamalika and Salakhutdinov, Ruslan},
+            volume = 	 {97},
+            series = 	 {Proceedings of Machine Learning Research},
+            address = 	 {Long Beach, California, USA},
+            month = 	 {09--15 Jun},
+            publisher = 	 {PMLR},
+            pdf = 	 {http://proceedings.mlr.press/v97/smith19a/smith19a.pdf},
+            url = 	 {http://proceedings.mlr.press/v97/smith19a.html},
+           }
