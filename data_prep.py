@@ -22,7 +22,7 @@ import utils
 from time import time
 
 parser = argparse.ArgumentParser(description='Dataset prep for image to 3D object super resolution')
-parser.add_argument('-no','--num_objects', default=100, help='number of objects to be converted', type = int)
+parser.add_argument('-no','--num_objects', default=500, help='number of objects to be converted', type = int)
 args = parser.parse_args()
 
 
@@ -243,25 +243,25 @@ def surface_computation(data):
 def calc_surface():
 	dims = 128
 	# first render as voxel array at high resolution
-	# models = []
-	# for s in wanted_classes:
-	# 	models += glob('data/objects/' + labels[s]+'/*.obj')
+	models = []
+	for s in wanted_classes:
+		models += glob('data/objects/' + labels[s]+'/*.obj')
 
-	# commands =[]
-	# random.shuffle(models)
-	# for m in models:
-	# 	command = 'scripts/binvox ' + m  + ' -d ' + str(dims)+ ' -pb -cb -c -e'   # this executable can be found at http://www.patrickmin.com/binvox/ ,
-	# 	# -d x idicates resoltuion will be x by x by x , -pb is to stop the visualization, the rest of the commnads are to help make the object water tight
-	# 	commands.append(command)
+	commands =[]
+	random.shuffle(models)
+	for m in models:
+		command = 'scripts/binvox ' + m  + ' -d ' + str(dims)+ ' -pb -cb -c -e'   # this executable can be found at http://www.patrickmin.com/binvox/ ,
+		# -d x idicates resoltuion will be x by x by x , -pb is to stop the visualization, the rest of the commnads are to help make the object water tight
+		commands.append(command)
 
-	# pool = Pool(processes=16)
-	# pbar = tqdm(pool.imap_unordered(call, commands), total=len(commands))
-	# pbar.set_description(f"Making large binvoxes from meshes")
-	# for _ in pbar:
-	# 	pass
+	pool = Pool(processes=16)
+	pbar = tqdm(pool.imap_unordered(call, commands), total=len(commands))
+	pbar.set_description(f"Making large binvoxes from meshes")
+	for _ in pbar:
+		pass
 
-	# message = 'The binvox executable failed. Please check its permissions, and that it can run properly from the commandline using the following command: '
-	# assert len(glob('data/objects/' + labels[s]+'/*.binvox')) > 0, message + command
+	message = 'The binvox executable failed. Please check its permissions, and that it can run properly from the commandline using the following command: '
+	assert len(glob('data/objects/' + labels[s]+'/*.binvox')) > 0, message + command
 		
 
 	
@@ -439,10 +439,10 @@ def download_images():
 
 
 
-# download()
-# manage_objects()
-# binvox()
-# convert_bin()
+download()
+manage_objects()
+binvox()
+convert_bin()
 calc_surface()
-# download_images()
+download_images()
 print ('finished eratin')
