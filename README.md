@@ -1,5 +1,5 @@
 # GEOMetrics
-This is a repository to reproduce the methods from the paper "GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects". This project is a combination of new ideas for mesh generation, applied to reconstructing mesh objects from single images. The goal of this project is to produce mesh objects which properly take advantage of the graceful scaling properties of their graph-based representation. 
+This is a repository to reproduce the methods from the paper "GEOMetrics: Exploiting Geometric Structure for Graph-Encoded Objects". This project is a combination of new ideas for mesh generation, applied to reconstructing mesh objects from single images. The goal of this project is to produce mesh objects which properly take advantage of the graceful scaling properties of their graph-based representation. This is a refactored version of the origional code, with batched learning, more efficient implementations of the ideas, and easier to use scripts. To see the origional code base loos in the old_GEOMetrics folder. There is a pretrained model included in this repo. This is a slightly different model then used for evaluation in the paper, and a such the F1 score at a threshold of .0001 is a little higher then in the paper at 68.1. Please email me if you want updated scores across all classes. Bear in mind this model is trained to produce the highest accuracy not for most the attractive mesh models,
  
 
 <p align="center">
@@ -13,13 +13,14 @@ There are 4 main ideas proposed in this project:
  * A differentaible surface sampling of faces allowing for a point-to-point loss and a point-to-surface loss to be introduced. This is further examined in the Loss_Comparison directory. 
  * A latent loss based on minimizing the distance between encodings of mesh objects produced through a mesh-to-voxel mapping procedure. 
  * A extension to the standard Graph Convolution Network called 0N-GCN which prevents vertex smoothing. This is defined in Layers.py.
- * An adaptive face splitting procedure which analyses local face curvature to encourage local complexity to emerge.
+ * An adaptive face splitting procedure which analyses local face curvature to encourage local complexity to emerge. This is only shown in the old_GEOMetrics repo
 
 
 This project runs with the following dependencies: 
-  * python 2.7 
-  * pytorch 0.4.0
+  * python 3.6
+  * pytorch 1.20
   * scipy
+  * numpy
   * matplotlib
   * PIL 
   * tqdm 
@@ -28,7 +29,7 @@ This project runs with the following dependencies:
   * binvoxer
 
 ## Data Production
- To produce the data needed to train and test the methods of this project use the 'data_prep.py' script. This will download CAD models from the core classes of the ShapeNet data set, produce the data required to train the latent loss, sample the surface of each ground truth mesh, render the objects as images, and split all the data into training, validation and test sets. This script makes use of the binvoxer executable, so first call:
+ To produce the data needed to train and test the methods of this project use the 'data_prep.py' script. This will download CAD models from the core classes of the ShapeNet data set, produce the data required to train the latent loss, sample the surface of each ground truth mesh, download the required images, and split all the data into training, validation and test sets. This script makes use of the binvoxer executable, so first call:
  ```bash
 sudo chmod 777 scripts/binvox 
 ```
@@ -36,22 +37,18 @@ Blender is also needed for this project so please ensure it is installed before 
  ```bash
 sudo apt install blender
 ```
-By default this scripts downloads the full chair class, and renders 24 images for each object. To achieve this call:
+To create the data needed for this project call the following, bare in mind this will take some time, as it needs to create 13 classes of objects, all with thousands of objects in them:
  ```bash
 python data_prep.py
 ```
-As an example to further understand how to customize the data, to produce a dataset made up of 1000 plane objects call:
+To make this faster you can use smaller subsets of each class by calling 
  ```bash
-python data_prep.py --object plane -no 1000
+python data_prep.py --num_object $k
 ```
+where k is the number of objects for each class you wish to produce.
 
 ## Differentiable Surface Losses
 We introduce two new losses for reconstructing meshes. These losses are based of the idea of differentiating through the random selection of points on a triangular surface via the reparameterization trick. This allows the adoption of a chamfer loss comparing the samplings of ground truth and predicted mesh surfaces, which does not explicitly penalize the position of vertices. We call this the point-to-point loss. This idea also allows for the adoption of a more accurate loss which compares a sampled set of points to a surface directly, using the "3D point to triangle distance" algorithm. We call this the point-to-surface loss. We compare these two losses to a loss which directly penalizes vertex position with respect to their ability to reconstruct surfaces, in the Loss_Comparison directory. 
-
-These functions require a python package to be built. To do this call: 
- ```bash
-python chamfer_distance/build.py
-```
 
 
 
@@ -67,9 +64,9 @@ One of the main contributions of this project, and a principle loss term for the
 
 To train this system call
  ```bash
-python auto_encoder.py --object $obj$
+python auto_encoder.py 
 ```
-where $obj$ is the object class you wish to train. 
+Please let this run until completetion as a copy of every object's latent code is saved at the end. 
 
 
 
@@ -82,20 +79,19 @@ where $obj$ is the object class you wish to train.
 
 
 ## Mesh Reconstruction
-The ideas put forth in this project are applied to the task of reconstructing 3D meshes from single RGB images. This is accomplished by iteratively applying what we call a mesh reconstruction module to an inputted mesh and image pair. In each module, image features are extracted form the image, and projected onto the inputted mesh. Then the mesh is passed through a series of our proposed 0N-CGN layers to deform its shape. Finally, the surface of the mesh is adaptively redefined based on the local curvature of its faces. The first module is presented a predefined mesh along with the target image, and each subsequent module takes the output of the previous mesh as its input mesh. The loss for this system is a combination of the latent loss, the differentiable surface losses, and two regularizers. 
+The ideas put forth in this project are applied to the task of reconstructing 3D meshes from single RGB images. This is accomplished by iteratively applying what we call a mesh reconstruction module to an inputted mesh and image pair. In each module, image features are extracted form the image, and projected onto the inputted mesh. Then the mesh is passed through a series of our proposed 0N-CGN layers to deform its shape. The first module is presented a predefined mesh along with the target image, and each subsequent module takes the output of the previous mesh as its input mesh. The loss for this system is a combination of the latent loss, the differentiable surface losses, and two regularizers. 
 
 To train this system call
  ```bash
-python GEOMetrics.py --object $obj$
+python GEOMetrics.py 
 ```
-where $obj$ is the object class you wish to train. 
-
-To render the results of a trained system on the test set call
- ```bash
-python GEOMetrics.py --object $obj$ --render
-```
-where $obj$ is the object class you wish to train. 
-
+The following parameters modify the scripts fucntionality: 
+  * Specify the experiment id you wish with the parameter --exp_id $id. 
+  * Evaluate the F1 score with the experiment you have performed with parameter --eval. 
+  * Evaluate mesh reconstructions visually with parameter --eval_vis. 
+  * Evaluate with pretrained models with --eval --pretrained or --eval_vis --pretrained. 
+  * To train the model that will recive the best accuracy at the expense of model attractiveness use the parameter --best_accuracy. 
+  * To train with the latent loss use the parameter --latent_loss, if you wish to avid training the latent loss auto-encoder you can not use this parameter. 
 
 
 
@@ -117,12 +113,12 @@ where $obj$ is the object class you wish to train.
 
 
 ## Contact:
-If you need any help getting the repo to work or have any question regardng the code or the paper, I'm happy to help at edward.smith@mail.mcgill.ca . 
+If you need any help getting the repo to work or have any question regardng the code or the paper, I'm happy to help at edward.smith@mail.mcgill.ca. 
 
 
 
 ## Reference:
-please cite my paper: https://arxiv.org/abs/1901.11461 ,if you use this repo for research with following bibtex: 
+please cite my paper: https://arxiv.org/abs/1901.11461 , if you use this repo for research with following bibtex: 
 
            @InProceedings{smith19a,
             title = 	 {{GEOM}etrics: Exploiting Geometric Structure for Graph-Encoded Objects},

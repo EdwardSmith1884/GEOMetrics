@@ -24,7 +24,7 @@ from PIL import Image
 from torchvision.transforms import Normalize as norm 
 from torchvision import transforms
 preprocess = transforms.Compose([
-   transforms.Scale((224, 224)), 
+   transforms.Resize((224, 224)), 
    transforms.ToTensor()
 ])
 
@@ -55,9 +55,6 @@ def load_initial( obj='386.obj'):
 	adj_info = adj_init(faces)
 
 	return adj_info, features  
-
-
-
 
 
 
@@ -185,10 +182,9 @@ class Mesh_loader(object):
 		data['samples'] = torch.FloatTensor(samples[:self.sample_num])
 		
 		#load images
-		if self.num > 0: 
-			num = random.randint(1,self.num)
-		else: 
-			num = 0   
+		
+		num = random.randint(0,self.num)
+		 
 		str_num  = str(num).zfill(2)
 		
 		img = (Image.open(self.Img_location + obj_class + '/' + self.set_type + '/' + obj +  '/rendering/' + str_num + '.png'))
@@ -431,13 +427,11 @@ def batch_point_to_point(pred_vert, adj_info, gt_points, num = 1000, f1 = False 
 
 		f_score = 0
 		for i in range(dist_to_pred.shape[0]): 
-			fn = float(torch.where(dist_to_pred[i] > 1e-2)[0].shape[0])
-			fp =  float(torch.where(dist_to_gt[i] > 1e-2)[0].shape[0])
-			tp =  float(torch.where(dist_to_gt[i] <= 1e-2)[0].shape[0])
-			precision = tp/(tp+fp)
-			recall = tp/(tp + fn )
-			if precision + recall == 0 : continue 
-			f_score +=  2*(precision * recall)/(precision + recall)
+			recall = float(torch.where(dist_to_pred[i] <=1e-2)[0].shape[0]) / float(num)
+			precision = float(torch.where(dist_to_gt[i] <= 1e-2)[0].shape[0]) / float(num)
+			
+			
+			f_score +=  2*(precision * recall)/(precision + recall+1e-8)
 		f_score = f_score / (batch_size)
 		return loss, f_score
 	else: 
@@ -449,7 +443,6 @@ def batch_point_to_surface(pred_vert, adj_info, gt_points, num = 1000, f1 = Fals
 	batch_size = pred_vert.shape[0]
 
 	# sample from faces and calculate pairs
-
 	pred_points = batch_sample(pred_vert, adj_info['faces'], num =num)
 
 	#####
@@ -499,17 +492,16 @@ def batch_point_to_surface(pred_vert, adj_info, gt_points, num = 1000, f1 = Fals
 
 		f_score = 0
 		for i in range(dist_to_pred.shape[0]): 
-			fn = float(torch.where(dist_to_pred[i] > 1e-2)[0].shape[0])
-			fp =  float(torch.where(dist_to_gt[i] > 1e-2)[0].shape[0])
-			tp =  float(torch.where(dist_to_gt[i] <= 1e-2)[0].shape[0])
-			precision = tp/(tp+fp)
-			recall = tp/(tp + fn )
-			if precision + recall == 0 : continue 
-			f_score +=  2*(precision * recall)/(precision + recall)
+			recall = float(torch.where(dist_to_pred[i] <=1e-2)[0].shape[0]) / float(num)
+			precision = float(torch.where(dist_to_gt[i] <= 1e-2)[0].shape[0]) / float(num)
+			f_score +=  2*(precision * recall)/(precision + recall+1e-8)
+
 		f_score = f_score / (batch_size)
 		return loss, f_score
 	else: 
 		return loss
+
+
 
 def calc_point_to_line(p, triangles, point_options): 
 	a, b, c = triangles

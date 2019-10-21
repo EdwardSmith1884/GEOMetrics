@@ -388,13 +388,17 @@ def calc_surface():
 
 def download_images():
 	print('downloading shapenet images')
-	command = 'wget http://cvgl.stanford.edu/data2/ShapeNetRendering.tgz -o data/imaages.tgz'
+	command = 'wget http://cvgl.stanford.edu/data2/ShapeNetRendering.tgz -O data/images.tgz'
 	os.system(command)
+	
 	print('extracting shapenet images')
+	command = 'tar -xzf data/images.tgz --directory data/'
+	os.system(command)
+	
 	os.rename('data/ShapeNetRendering','data/images' )
 
+	print('Splitting dataset in training, valudation, and tests.')
 	folders = glob('data/images/*/')
-
 	for folder in tqdm(folders): 
 
 		im_fol = glob( folder + '*')

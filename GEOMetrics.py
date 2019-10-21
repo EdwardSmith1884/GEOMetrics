@@ -10,12 +10,13 @@ parser.add_argument('--eval_vis', action='store_true', default=False,
                     help='Evaulate mesh predictions')
 parser.add_argument('--pretrained', action='store_true', default=False,
                     help='Evaulate with pretrained model')
+
 parser.add_argument('--seed', type=int, default=41, help='Random seed.')
 parser.add_argument('--lr', type=float, default=0.0001,
                     help='Initial learning rate.')
 parser.add_argument('--best_accuracy', action='store_true', default=False,
                     help='Train to achieve highest accuracy')
-parser.add_argument('--no_latent_loss', action='store_false', default=True,
+parser.add_argument('--latent_loss', action='store_true', default=False,
                     help='Train with latent loss')
 parser.add_argument('--exp_id', type=str, default='Test',
                     help='The experiment name')
@@ -71,8 +72,11 @@ modelA.cuda(), encoder1.cuda(), encoder2.cuda(),encoder3.cuda(), modelB.cuda(), 
 params = list(modelA.parameters()) + list(encoder1.parameters()) + list(encoder2.parameters()) + list(encoder3.parameters()) +list(modelB.parameters())  +list(modelC.parameters())
 optimizer = optim.Adam(params,lr=args.lr)
 
-encoder_mesh.load_state_dict(torch.load(checkpoint_dir + 'encoder'))
-encoder_mesh.eval()
+
+
+if args.latent_loss: 
+    encoder_mesh.load_state_dict(torch.load(checkpoint_dir + 'encoder'))
+    encoder_mesh.eval()
 
 
 
@@ -158,7 +162,7 @@ class Engine():
             else:
                 lap_loss = torch.FloatTensor([0]).cuda() 
 
-            if args.no_latent_loss and (on_latent.sum() != 0): 
+            if args.latent_loss and (on_latent.sum() != 0): 
                 latent_pred = encoder_mesh(vertex_positions_3, adj_info['adj'])
                 latent_loss = .0005*(torch.mean(torch.abs(latent_pred - train_latent), dim = 1) * on_latent / ( on_latent.sum())).sum()
             else: 
@@ -230,8 +234,8 @@ class Engine():
                     print_loss = (class_loss_ptp / iterations)
                     print_loss_f1 = (class_loss_f1 / iterations)
                     
-                    message = f'Valid || Epoch: {self.epoch}, class: {obj_class}, f1: {print_loss_f1:.2f}, cur_f1: {self.best_f1:.2f}, ptp: {print_loss:.2f}, cur_ptp: {self.best_ptp:.2f}'
-                    tqdm.write(message)
+            message = f'Valid || Epoch: {self.epoch}, class: {obj_class}, f1: {print_loss_f1:.2f}, cur_f1: {self.best_f1:.2f}, ptp: {print_loss:.2f}, cur_ptp: {self.best_ptp:.2f}'
+            tqdm.write(message)
                 
             total_loss_ptp += ((class_loss_ptp / iterations) / 13.)
             total_loss_f1 += ((class_loss_f1 / iterations) /13.)
@@ -337,6 +341,8 @@ class Engine():
                             image = (image*255.).astype(np.uint8)
                             Image.fromarray(image).show()
                             render_mesh(verts.data.cpu().numpy(), adj_info['faces'].data.cpu().numpy())
+                            message = f'Press any key for next model '
+                            tqdm.write(message)
                             input()
 
                     # surface loss
