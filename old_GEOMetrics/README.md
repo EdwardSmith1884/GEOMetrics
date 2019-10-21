@@ -3,7 +3,7 @@ This is a repository to reproduce the methods from the paper "GEOMetrics: Exploi
  
 
 <p align="center">
-  <img  src="images/density.png" width="500"  >
+  <img  src="../images/density.png" width="500"  >
 </p>
 <p align="center">
 <sub> Example of the variation in face density our method achieves</sub>
@@ -56,7 +56,7 @@ python chamfer_distance/build.py
 
 
 <p align="center">
-  <img  src="images/loss_comparison.png"  >
+  <img  src="../images/loss_comparison.png"  >
 </p>
 <p align="center">
 <sub> A diagram comparing different reconstruction losses. </sub>
@@ -74,7 +74,7 @@ where $obj$ is the object class you wish to train.
 
 
 <p align="center">
-  <img  src="images/enc_dec.png" width="600"  >
+  <img  src="../images/enc_dec.png" width="600"  >
 </p>
 <p align="center">
 <sub> A diagram illustrating the mesh-to-voxel mapping and how it is employed for producing the latent loss. </sub>
@@ -100,7 +100,7 @@ where $obj$ is the object class you wish to train.
 
 
 <p align="center">
-  <img  src="images/pipeline_1901_thick.png"   width = "800">
+  <img  src="../images/pipeline_1901_thick.png"   width = "800">
 </p>
 <p align="center">
   <sub> A single mesh reconstruction module. </sub>
@@ -108,7 +108,7 @@ where $obj$ is the object class you wish to train.
 
 
 <p align="center">
-  <img  src="images/results.png"   width = "600">
+  <img  src="../images/results.png"   width = "600">
 </p>
 <p align="center">
  <sub> Reconstruction results </sub> 
