@@ -41,9 +41,9 @@ if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 
 # gather data
-adj_info, initial_positions= load_initial('866.obj')
+adj_info, initial_positions= load_initial('482.obj')
 initial_positions = Variable(initial_positions.cuda())
-
+num_verts = initial_positions.shape[0]
 
 # load training set 
 train_data = Mesh_loader(images, meshes, samples, set_type = 'train', sample_num = sample_num)
@@ -63,9 +63,9 @@ for c in classes:
 encoder1 = VGG()
 encoder2 = VGG()
 encoder3 = VGG()
-modelA = BatchMeshDeformationBlock(963)
-modelB = BatchMeshDeformationBlock(1155)
-modelC = BatchMeshDeformationBlock(1155)
+modelA = BatchMeshDeformationBlock(963, num_verts)
+modelB = BatchMeshDeformationBlock(1155, num_verts)
+modelC = BatchMeshDeformationBlock(1155, num_verts)
 encoder_mesh = BatchMeshEncoder(50)
 modelA.cuda(), encoder1.cuda(), encoder2.cuda(),encoder3.cuda(), modelB.cuda(), modelC.cuda(), encoder_mesh.cuda()
 
@@ -108,7 +108,7 @@ class Engine():
             on_latent = batch['encode'].cuda()
             img_info = batch['img_info'].cuda()
             batch_size  = images.shape[0]
-            initial_positions_batch = initial_positions.unsqueeze(0).expand(batch_size,866, 3)
+            initial_positions_batch = initial_positions.unsqueeze(0).expand(batch_size, num_verts, 3)
 
             # extract image features
             features1  = encoder1(images)
@@ -202,7 +202,7 @@ class Engine():
                     img_info = batch['img_info'].cuda()
                     obj_class = batch['class'][0]
                     batch_size  = images.shape[0]
-                    initial_positions_batch = initial_positions.unsqueeze(0).expand(batch_size,866, 3)
+                    initial_positions_batch = initial_positions.unsqueeze(0).expand(batch_size,num_verts, 3)
 
                     # extract image features
                     features1  = encoder1(images)
@@ -312,7 +312,7 @@ class Engine():
                     img_info = batch['img_info'].cuda()
                     obj_class = batch['class'][0]
                     batch_size  = images.shape[0]
-                    initial_positions_batch = initial_positions.unsqueeze(0).expand(batch_size,866, 3)
+                    initial_positions_batch = initial_positions.unsqueeze(0).expand(batch_size, num_verts, 3)
 
                     # extract image features
                     features1  = encoder1(images)

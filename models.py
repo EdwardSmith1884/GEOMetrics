@@ -201,7 +201,7 @@ class MeshDeformationBlock(nn.Module):
 		return features, coords 
 
 class BatchMeshDeformationBlock(nn.Module):
-	def __init__(self, input_features, hidden = 192, output_features = 3):
+	def __init__(self, input_features,verts, hidden = 192, output_features = 3):
 		super(BatchMeshDeformationBlock, self).__init__()
 		self.gc1 = Batch_Image_ZERON_GCNGCN(input_features, hidden)
 		self.gc2 = Batch_Image_ZERON_GCNGCN(hidden, hidden)
@@ -219,20 +219,20 @@ class BatchMeshDeformationBlock(nn.Module):
 		self.gc15 = Batch_Image_ZERON_GCNGCN(hidden,  output_features)
 		self.hidden = hidden
 
-		self.bn1 = nn.BatchNorm1d(866)
-		self.bn2 = nn.BatchNorm1d(866)
-		self.bn3 = nn.BatchNorm1d(866)
-		self.bn4 = nn.BatchNorm1d(866)
-		self.bn5 = nn.BatchNorm1d(866)
-		self.bn6 = nn.BatchNorm1d(866)
-		self.bn7 = nn.BatchNorm1d(866)
-		self.bn8 = nn.BatchNorm1d(866)
-		self.bn9 = nn.BatchNorm1d(866)
-		self.bn10 = nn.BatchNorm1d(866)
-		self.bn11 = nn.BatchNorm1d(866)
-		self.bn12 = nn.BatchNorm1d(866)
-		self.bn13 = nn.BatchNorm1d(866)
-		self.bn14 = nn.BatchNorm1d(866)
+		self.bn1 = nn.BatchNorm1d(verts)
+		self.bn2 = nn.BatchNorm1d(verts)
+		self.bn3 = nn.BatchNorm1d(verts)
+		self.bn4 = nn.BatchNorm1d(verts)
+		self.bn5 = nn.BatchNorm1d(verts)
+		self.bn6 = nn.BatchNorm1d(verts)
+		self.bn7 = nn.BatchNorm1d(verts)
+		self.bn8 = nn.BatchNorm1d(verts)
+		self.bn9 = nn.BatchNorm1d(verts)
+		self.bn10 = nn.BatchNorm1d(verts)
+		self.bn11 = nn.BatchNorm1d(verts)
+		self.bn12 = nn.BatchNorm1d(verts)
+		self.bn13 = nn.BatchNorm1d(verts)
+		self.bn14 = nn.BatchNorm1d(verts)
 
 	def forward(self, features, pooled , adj):
 
